@@ -1,0 +1,60 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Color Palette */
+:root {
+  --space-indigo: #22223b;
+  --dusty-grape: #4a4e69;
+  --lilac-ash: #9a8c98;
+  --almond-silk: #c9ada7;
+  --seashell: #f2e9e4;
+
+  --text-dark: #22223b;
+  --text-light: #4a4e69;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--seashell);
+  color: var(--text-dark);
+  height: 100vh;
+}
+
+
+h1 {
+  font-size: 2.2rem;
+  color: var(--space-indigo);
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: var(--dusty-grape);
+  margin-bottom: 25px;
+}
+
+
+/* Primary = space indigo */
+.primary {
+  background: var(--space-indigo);
+  color: white;
+}
+
+.primary:hover {
+  background: #2e2e4d;
+}
+
+/* Secondary = outline style */
+.secondary {
+  border: 2px solid var(--dusty-grape);
+  color: var(--dusty-grape);
+  background: transparent;
+}
+
+.secondary:hover {
+  background: var(--dusty-grape);
+  color: white;
+}

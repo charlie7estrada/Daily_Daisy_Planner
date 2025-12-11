@@ -1,0 +1,29 @@
+-- Users
+    - ID - primary key
+    - First Name
+    - Last Name
+    - Email
+    - Password
+    - Create Date
+    - DOB
+
+        - List of Planners
+
+-- Planners
+    - ID - primary key
+    - User ID
+    - Name
+    - View Type (month, week, day)
+    - Created at
+
+        - User Id (User who created the planner)
+        - List of tasks
+
+-- Tasks
+    - ID - primary key
+    - Planner ID
+    - Title
+    - Status
+    - Created at
+
+        - Planner ID

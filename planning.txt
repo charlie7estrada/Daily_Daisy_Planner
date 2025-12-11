@@ -1,0 +1,43 @@
+-- Modular Digital Planner app
+
+Functionality of Application
+
+-- Users must be able to register an account
+-- Users must be able to login
+    - We want to authenticate our users
+-- Users should be able to create a customized schedule
+-- Users should be able to create a task and apply it for the day / week / month
+-- Users should be able to view their schedule by day / week / month in a modular environment
+
+How our UI should be structured/organized
+
+-- Welome Page (User is not signed in)
+    - This would display information about our app
+    - Can showcase custom planners, explaining why our app will improve their lives
+
+-- Register Page
+    - Register Form
+
+-- User Dashboard Page
+    - Sidebar displaying settings and drag + drop schedule templates
+    - Dashboard shows current planner view
+
+Technologies being used to develop our APP
+
+-- Flask as Backend (Python)
+    -- DB will be SQLite
+    -- SQLAlchemy as ORM
+-- React JS as Frontend
+    -- Material UI and Bootstrap as CSS Libraries
+
+
+Name: dailydaisy
+
+
+Color Palettes:
+Soft Lavender -- https://coolors.co/palette/22223b-4a4e69-9a8c98-c9ada7-f2e9e4
+    ~Space Indigo: 22223b
+    ~Dusty Grape: 4a4e69
+    ~Lilac Ash: 9a8c98
+    ~Almond Silk: c9ada7
+    ~Seashell: f2e9e4
