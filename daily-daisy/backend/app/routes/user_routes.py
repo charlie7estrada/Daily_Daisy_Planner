@@ -65,9 +65,18 @@ def get_profile(current_user):
 def update_profile(current_user):
     data = request.get_json()
     
-    # Update location if provided
+    # Update email
+    if 'email' in data and data['email']:
+        current_user.email = data['email']
+    
+    # Update password
+    if 'password' in data and data['password']:
+        current_user.set_password(data['password'])
+
+    # Update location
     if 'location' in data:
         current_user.location = data['location']
+        
         db.session.commit()
     
     return jsonify({

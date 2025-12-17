@@ -6,6 +6,7 @@ import Login from './views/Login';
 import Register from './views/Register';
 import Dashboard from './views/Dashboard';
 import PlannerView from './views/PlannerView';
+import UpdateProfile from './views/UpdateProfile';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -67,9 +68,16 @@ function AppRoutes() {
         <ProtectedRoute>
           <PlannerView />
         </ProtectedRoute>
-      }
-    />
-    </Routes>
+        }
+      />
+
+      <Route path="/profile" 
+        element={
+        <UpdateProfile />
+        }
+      />
+
+      </Routes>
   );
 }
 
