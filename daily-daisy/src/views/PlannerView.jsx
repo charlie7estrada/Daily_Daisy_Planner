@@ -7,33 +7,81 @@ import AddTaskForm from '../components/AddTaskForm';
 import TaskItem from '../components/TaskItem';
 import Weather from '../components/Weather';
 import { useAuth } from '../context/AuthContext';
+import { getPlanners } from '../services/plannerService';
+import DailyView from '../components/DailyView';
 
 export default function PlannerView() {
   const { plannerId } = useParams(); // Gets plannerId from URL (e.g., /planner/5)
   const navigate = useNavigate(); // For navigation back to dashboard
   
+  const [planner, setPlanner] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
   const { user } = useAuth();
 
-  // Load tasks when component mounts
+  // Load planner and tasks when component mounts
   useEffect(() => {
-    loadTasks();
-  }, [plannerId]); // Reload if plannerId changes
+    loadPlannerAndTasks();
+  }, [plannerId]);
 
-  const loadTasks = async () => {
+  const loadPlannerAndTasks = async () => {
     try {
       setLoading(true);
-      const data = await getTasks(plannerId);
-      setTasks(data);
+      // Get all planners and find the current one
+      const planners = await getPlanners();
+      const currentPlanner = planners.find(p => p.id === parseInt(plannerId));
+      setPlanner(currentPlanner);
+      
+      // Get tasks
+      const tasksData = await getTasks(plannerId);
+      setTasks(tasksData);
     } catch (err) {
-      setError('Failed to load tasks');
+      setError('Failed to load planner');
     } finally {
       setLoading(false);
     }
   };
+
+  const loadTasks = async () => {
+    try {
+      const data = await getTasks(plannerId);
+      setTasks(data);
+    } catch (err) {
+      setError('Failed to load tasks');
+    }
+  };
+
+  if (loading) {
+    return <div style={{ padding: '20px' }}>Loading...</div>;
+  }
+
+  if (!planner) {
+    return <div style={{ padding: '20px' }}>Planner not found</div>;
+  }
+
+// Render Daily View for daily planners
+if (planner.view_type === 'daily') {
+  return (
+    <div style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
+      <button 
+        onClick={() => navigate('/dashboard')}
+        style={{ padding: '8px 16px', marginBottom: '10px', cursor: 'pointer' }}
+      >
+        ← Back to Dashboard
+      </button>
+
+      {user?.location && (
+        <div style={{ marginBottom: '20px' }}>
+          <Weather city={user.location} />
+        </div>
+      )}
+
+      <DailyView plannerId={plannerId} tasks={tasks} onTasksChange={loadTasks} />
+    </div>
+  );
+}
 
   return (
     <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>

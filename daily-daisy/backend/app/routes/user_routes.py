@@ -77,7 +77,7 @@ def update_profile(current_user):
     if 'location' in data:
         current_user.location = data['location']
         
-        db.session.commit()
+    db.session.commit()
     
     return jsonify({
         'message': 'Profile updated',

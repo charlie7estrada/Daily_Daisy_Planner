@@ -59,7 +59,7 @@ export default function TaskItem({ task, onUpdate }) {
             color: task.status === 'completed' ? '#999' : '#000'
           }}
         >
-          {task.title}
+          {task.title.replace(/\[\d{1,2}(AM|PM)\]\s*/, '')}
         </span>
         <button
           onClick={handleDelete}
