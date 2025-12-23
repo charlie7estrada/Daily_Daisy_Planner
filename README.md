@@ -4,7 +4,7 @@ A full-stack modular digital planner for organizing your daily tasks and goals.
 
 **🔗 [Live Demo](https://dailydaisyplanner.vercel.app)**
 
-![Daily Daisy Screenshot](screenshot.png)
+![Daily Daisy Screenshot](daisy daily view.png)
 
 ## Features
 - ✅ User authentication & persistent data
