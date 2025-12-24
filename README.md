@@ -11,6 +11,7 @@ A full-stack modular digital planner for organizing your daily tasks and goals.
 - 📅 Modular planner components
 - 💾 Create, edit, and delete entries
 - 📱 Responsive design for mobile & desktop
+- 🌤️ Live weather display based on user location input (powered by OpenWeather API)
 
 ## Tech Stack
 | Frontend | Backend | Database | Deployment |
