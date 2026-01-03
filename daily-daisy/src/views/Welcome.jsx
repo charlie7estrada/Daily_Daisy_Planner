@@ -1,16 +1,45 @@
 // welcome page + inspo
 
 import { Link } from 'react-router-dom';
-
+import daisyImage from '../assets/daisy.png';
 
 export default function WelcomePage() {
     return (
-    <div style={{ maxWidth: '800px', margin: '60px auto', padding: '60px' }}>
+    <div style={{ maxWidth: '800px', margin: '60px auto', padding: '60px', position:'relative' }}>
+
+    <img
+        src={daisyImage}
+        alt="daisy"
+        style={{
+            position: 'absolute',
+            left: '-50px',
+            top: '30%',
+            transform: 'translateY(-50%)',
+            width: '80px',
+            height: '80px',
+            animation: 'spin 10s linear infinite'
+        }}
+    />
+
+    <img
+        src={daisyImage}
+        alt="daisy"
+        style={{
+            position: 'absolute',
+            right: '-50px',
+            top: '30%',
+            transform: 'translateY(-50%)',
+            width: '80px',
+            height: '80px',
+            animation: 'spin 10s linear infinite reverse'
+        }}
+    />
+
       <h2 >
         Welcome to:
       </h2>
 
-      <h1 style={{ fontFamily: 'Slow Play, cursive', fontWeight: 400, fontSize: '3rem', marginTop: '60px', whiteSpace: 'nowrap', animation: 'fadeSlide 2s ease-out, float 3s ease-in-out infinite', textShadow: '2px 2px 0px #ddd, 4px 4px 0px #ccc, 6px 6px 0px #bbb'  }}>
+      <h1 style={{ fontFamily: 'Slow Play, cursive', fontWeight: 400, fontSize: '3rem', marginTop: '60px', textAlign: 'center', whiteSpace: 'nowrap', animation: 'fadeSlide 2s ease-out, float 3s ease-in-out infinite', textShadow: '2px 2px 0px #ddd, 4px 4px 0px #ccc, 6px 6px 0px #bbb'  }}>
         The Daily Daisy Planner!
       </h1>
 
