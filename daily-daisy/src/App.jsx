@@ -7,6 +7,7 @@ import Register from './views/Register';
 import Dashboard from './views/Dashboard';
 import PlannerView from './views/PlannerView';
 import UpdateProfile from './views/UpdateProfile';
+import WelcomePage from './views/Welcome';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -33,8 +34,22 @@ function PublicRoute({ children }) {
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" />} />
+
+      <Route 
+        path="/" 
+        element={<Navigate to="/welcome" />
+        }
+      />
       
+      <Route 
+        path="/welcome" 
+        element={
+          <PublicRoute>
+            <WelcomePage />
+          </PublicRoute>
+        }
+      />
+
       <Route 
         path="/login" 
         element={
@@ -73,7 +88,9 @@ function AppRoutes() {
 
       <Route path="/profile" 
         element={
-        <UpdateProfile />
+          <ProtectedRoute>
+            <UpdateProfile />
+          </ProtectedRoute>
         }
       />
 

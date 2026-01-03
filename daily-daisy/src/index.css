@@ -58,3 +58,32 @@ h1 {
   background: var(--dusty-grape);
   color: white;
 }
+
+/* welcome page animations */
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+/* fonts */
+@font-face {
+  font-family: 'Slow Play';
+  src: url('./fonts/Slow Play.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
