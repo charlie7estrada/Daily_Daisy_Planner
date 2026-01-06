@@ -5,9 +5,10 @@ import daisyImage from '../assets/daisy.png';
 
 export default function WelcomePage() {
     return (
-    <div style={{ maxWidth: '800px', margin: '60px auto', padding: '60px', position:'relative' }}>
+    <div style={{ maxWidth: '800px', width: '90%', margin: '60px auto', padding: '60px', position:'relative' }}>
 
     <img
+        className="daisy-decoration left"
         src={daisyImage}
         alt="daisy"
         style={{
@@ -22,6 +23,7 @@ export default function WelcomePage() {
     />
 
     <img
+        className="daisy-decoration right"
         src={daisyImage}
         alt="daisy"
         style={{
@@ -39,7 +41,15 @@ export default function WelcomePage() {
         Welcome to:
       </h2>
 
-      <h1 style={{ fontFamily: 'Slow Play, cursive', fontWeight: 400, fontSize: '3rem', marginTop: '60px', textAlign: 'center', whiteSpace: 'nowrap', animation: 'fadeSlide 2s ease-out, float 3s ease-in-out infinite', textShadow: '2px 2px 0px #ddd, 4px 4px 0px #ccc, 6px 6px 0px #bbb'  }}>
+      <h1 style={{ 
+        fontFamily: 'Slow Play, cursive', 
+        fontWeight: 400, 
+        fontSize: 'clamp(1.5rem, 5vw, 3rem)', 
+        marginTop: '60px', 
+        textAlign: 'center',  
+        animation: 'fadeSlide 2s ease-out, float 3s ease-in-out infinite', 
+        textShadow: '2px 2px 0px #ddd, 4px 4px 0px #ccc, 6px 6px 0px #bbb'  
+        }}>
         The Daily Daisy Planner!
       </h1>
 
