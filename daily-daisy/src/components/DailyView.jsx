@@ -17,6 +17,7 @@ export default function DailyView({ plannerId, tasks, onTasksChange }) {
     const saved = localStorage.getItem('dailyView_endHour');
     return saved ? Number(saved) : 20;
   });
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   // Save preferences to localStorage
   useEffect(() => {
@@ -31,6 +32,43 @@ export default function DailyView({ plannerId, tasks, onTasksChange }) {
     localStorage.setItem('dailyView_endHour', endHour);
   }, [endHour]);
 
+  // Navigate to previous day
+  const previousDay = () => {
+    const newDate = new Date(currentDate);
+    newDate.setDate(newDate.getDate() - 1);
+    setCurrentDate(newDate);
+  };
+
+  // Navigate to next day
+  const nextDay = () => {
+    const newDate = new Date(currentDate);
+    newDate.setDate(newDate.getDate() + 1);
+    setCurrentDate(newDate);
+  };
+
+  // Go to today
+  const goToToday = () => {
+    setCurrentDate(new Date());
+  };
+
+  // Format date for display
+  const formatDate = (date) => {
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
+
+  // Format date for tags (YYYY-MM-DD)
+  const getDateTag = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `[${year}-${month}-${day}]`;
+  };
+
   const hours = Array.from({ length: 24 }, (_, i) => i);
   const filteredHours = showAllHours ? hours : hours.filter(h => h >= startHour && h <= endHour);
 
@@ -41,18 +79,21 @@ export default function DailyView({ plannerId, tasks, onTasksChange }) {
   };
 
   const getTasksForHour = (hour) => {
+    const dateTag = getDateTag(currentDate);
     const hourTag = `[${formatHour(hour).replace(':00 ', '')}]`;
-    return tasks.filter(task => task.title.includes(hourTag));
+    const combinedTag = `${dateTag}${hourTag}`;
+    return tasks.filter(task => task.title.includes(combinedTag));
   };
 
   const handleAddTask = async (hour) => {
     if (!newTaskTitle.trim()) return;
 
+    const dateTag = getDateTag(currentDate);
     const hourTag = `[${formatHour(hour).replace(':00 ', '')}]`;
-    const titleWithHour = `${hourTag} ${newTaskTitle}`;
+    const titleWithTags = `${dateTag}${hourTag} ${newTaskTitle}`;
 
     try {
-      await createTask(plannerId, titleWithHour);
+      await createTask(plannerId, titleWithTags);
       setNewTaskTitle('');
       setAddingToHour(null);
       onTasksChange();
@@ -63,13 +104,63 @@ export default function DailyView({ plannerId, tasks, onTasksChange }) {
 
   return (
     <div style={{ padding: '20px' }}>
-      {/* Header with date and controls */}
-      <div style={{ marginBottom: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-        <h2 style={{ margin: 0 }}>
-          {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-        </h2>
-        
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+      {/* Header with date navigation and controls */}
+      <div style={{ marginBottom: '15px' }}>
+        {/* Date Navigation */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          marginBottom: '15px',
+          flexWrap: 'wrap',
+          gap: '10px'
+        }}>
+          <button
+            onClick={previousDay}
+            style={{
+              padding: '8px 16px',
+              cursor: 'pointer',
+              border: '1px solid var(--lilac-ash)',
+              borderRadius: '8px',
+              background: 'white'
+            }}
+          >
+            ← Previous
+          </button>
+          
+          <h2 style={{ margin: 0, textAlign: 'center', flex: 1 }}>
+            {formatDate(currentDate)}
+          </h2>
+          
+          <button
+            onClick={nextDay}
+            style={{
+              padding: '8px 16px',
+              cursor: 'pointer',
+              border: '1px solid var(--lilac-ash)',
+              borderRadius: '8px',
+              background: 'white'
+            }}
+          >
+            Next →
+          </button>
+        </div>
+
+        {/* Time Range Controls */}
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+          <button
+            onClick={goToToday}
+            className="secondary"
+            style={{
+              padding: '6px 12px',
+              cursor: 'pointer',
+              borderRadius: '4px',
+              fontSize: '0.9rem'
+            }}
+          >
+            Today
+          </button>
+          
           {!showAllHours && (
             <>
               <label style={{ fontSize: '0.9rem' }}>From:</label>
