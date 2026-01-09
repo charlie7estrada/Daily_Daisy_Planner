@@ -5,16 +5,59 @@ export default function MonthlyView({ plannerId, tasks, onTasksChange }) {
   const [selectedDay, setSelectedDay] = useState(null);
   const [noteText, setNoteText] = useState('');
   const [editingTaskId, setEditingTaskId] = useState(null);
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth()); // 0-11
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
   // Days of the week for header
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   
-  // Generate array of days 1-31
-  const days = Array.from({ length: 31 }, (_, i) => i + 1);
+  // Get number of days in the current month
+  const getDaysInMonth = (month, year) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+  
+  // Get the day of week the month starts on (0 = Sunday, 6 = Saturday)
+  const getFirstDayOfMonth = (month, year) => {
+    return new Date(year, month, 1).getDay();
+  };
+  
+  // Get month name
+  const getMonthName = (month) => {
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'];
+    return monthNames[month];
+  };
+  
+  // Navigate to previous month
+  const previousMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear(currentYear - 1);
+    } else {
+      setCurrentMonth(currentMonth - 1);
+    }
+  };
+  
+  // Navigate to next month
+  const nextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear(currentYear + 1);
+    } else {
+      setCurrentMonth(currentMonth + 1);
+    }
+  };
+  
+  const daysInMonth = getDaysInMonth(currentMonth, currentYear);
+  const firstDayOfWeek = getFirstDayOfMonth(currentMonth, currentYear);
+  const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+  
+  // Create empty cells for days before the month starts
+  const emptyDays = Array.from({ length: firstDayOfWeek }, (_, i) => i);
 
   // Get note for a specific day
   const getNoteForDay = (day) => {
-    const dayTag = `[Day${day}]`;
+    const dayTag = `[${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}]`;
     return tasks.find(task => task.title.startsWith(dayTag));
   };
 
@@ -24,7 +67,7 @@ export default function MonthlyView({ plannerId, tasks, onTasksChange }) {
     setSelectedDay(day);
     if (existingNote) {
       // Strip the [DayX] tag from the title for editing
-      const noteWithoutTag = existingNote.title.replace(/\[Day\d+\]\s*/, '');
+      const noteWithoutTag = existingNote.title.replace(/\[\d{4}-\d{2}-\d{2}\]\s*/, '');
       setNoteText(noteWithoutTag);
       setEditingTaskId(existingNote.id);
     } else {
@@ -37,7 +80,8 @@ export default function MonthlyView({ plannerId, tasks, onTasksChange }) {
   const handleSaveNote = async () => {
     if (!noteText.trim()) return;
 
-    const noteWithTag = `[Day${selectedDay}] ${noteText}`;
+    const dateTag = `[${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}]`;
+    const noteWithTag = `${dateTag} ${noteText}`;
 
   try {
     if (editingTaskId) {
@@ -74,7 +118,43 @@ export default function MonthlyView({ plannerId, tasks, onTasksChange }) {
 
   return (
     <div>
-      <h1 style={{ marginBottom: '20px', textAlign: 'center' }}>Monthly Calendar</h1>
+      {/* Month/Year Navigation */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '30px'
+      }}>
+        <button
+          onClick={previousMonth}
+          style={{
+            padding: '8px 16px',
+            cursor: 'pointer',
+            border: '1px solid var(--lilac-ash)',
+            borderRadius: '8px',
+            background: 'white'
+          }}
+        >
+          ← Previous
+        </button>
+        
+        <h1 style={{ margin: 0 }}>
+          {getMonthName(currentMonth)} {currentYear}
+        </h1>
+        
+        <button
+          onClick={nextMonth}
+          style={{
+            padding: '8px 16px',
+            cursor: 'pointer',
+            border: '1px solid var(--lilac-ash)',
+            borderRadius: '8px',
+            background: 'white'
+          }}
+        >
+          Next →
+        </button>
+      </div>
 
       {/* Day of week header */}
       <div style={{
@@ -101,6 +181,11 @@ export default function MonthlyView({ plannerId, tasks, onTasksChange }) {
         gridTemplateColumns: 'repeat(7, 1fr)',
         gap: '8px'
       }}>
+        {/* Empty cells before month starts */}
+        {emptyDays.map(i => (
+          <div key={`empty-${i}`} style={{ minHeight: '100px' }} />
+        ))}
+        
         {days.map(day => {
           const note = getNoteForDay(day);
           const hasNote = !!note;
@@ -150,7 +235,7 @@ export default function MonthlyView({ plannerId, tasks, onTasksChange }) {
                   WebkitBoxOrient: 'vertical',
                   lineHeight: '1.3'
                 }}>
-                  {note.title.replace(/\[Day\d+\]\s*/, '')}
+                  {note.title.replace(/\[\d{4}-\d{2}-\d{2}\]\s*/, '')}
                 </div>
               )}
             </div>
@@ -185,7 +270,7 @@ export default function MonthlyView({ plannerId, tasks, onTasksChange }) {
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)'
             }}
           >
-            <h2 style={{ marginBottom: '20px' }}>Day {selectedDay}</h2>
+            <h2 style={{ marginBottom: '20px' }}>{getMonthName(currentMonth)} {selectedDay}, {currentYear}</h2>
             
             <textarea
               value={noteText}
