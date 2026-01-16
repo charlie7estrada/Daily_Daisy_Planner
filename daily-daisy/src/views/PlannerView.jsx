@@ -9,6 +9,7 @@ import Weather from '../components/Weather';
 import { useAuth } from '../context/AuthContext';
 import { getPlanners } from '../services/plannerService';
 import DailyView from '../components/DailyView';
+import WeeklyView from '../components/WeeklyView';
 import MonthlyView from '../components/MonthlyView';
 
 export default function PlannerView() {
@@ -80,6 +81,28 @@ if (planner.view_type === 'daily') {
       )}
 
       <DailyView plannerId={plannerId} tasks={tasks} onTasksChange={loadTasks} />
+    </div>
+  );
+}
+
+// Render Weekly View for weekly planners
+if (planner.view_type === 'weekly') {
+  return (
+    <div style={{ padding: '20px', maxWidth: '1400px', margin: '0 auto' }}>
+      <button 
+        onClick={() => navigate('/dashboard')}
+        style={{ padding: '8px 16px', marginBottom: '10px', cursor: 'pointer' }}
+      >
+        ← Back to Dashboard
+      </button>
+
+      {user?.location && (
+        <div style={{ marginBottom: '20px' }}>
+          <Weather city={user.location} />
+        </div>
+      )}
+
+      <WeeklyView plannerId={plannerId} tasks={tasks} onTasksChange={loadTasks} />
     </div>
   );
 }
