@@ -1,6 +1,5 @@
 // login form
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { apiRequest } from '../services/api';
@@ -10,32 +9,60 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // persist error across remounts using sessionStorage
+  useEffect(() => {
+    const savedError = sessionStorage.getItem('loginError');
+    if (savedError) {
+      setError(savedError);
+      sessionStorage.removeItem('loginError');
+    }
+  }, []);
   
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
 
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.');
+      setLoading(false);
+      return;
+    }
     try {
       const response = await apiRequest('/auth/login', {
         method: 'POST',
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
-
       if (response.ok) {
+        const data = await response.json();
         login(data.token, data.user);
         navigate('/dashboard');
       } else {
-        setError(data.message || 'Login failed');
+        if (response.status === 401) {
+          sessionStorage.setItem('loginError', 'Invalid email or password. Please try again.');
+          setError('Invalid email or password. Please try again.');
+        } else {
+          try {
+            const data = await response.json();
+            const errorMessage = data.message || 'Login failed. Please try again.';
+            sessionStorage.setItem('loginError', errorMessage);
+            setError(errorMessage);
+          } catch {
+            sessionStorage.setItem('loginError', 'Login failed. Please try again.');
+            setError('Login failed. Please try again.');
+          }
+        }
+        setLoading(false);
       }
-    } catch (err) {
+    } catch {
+      sessionStorage.setItem('loginError', 'Failed to connect to server');
       setError('Failed to connect to server');
-    } finally {
       setLoading(false);
     }
   };
@@ -44,7 +71,7 @@ export default function Login() {
     <div style={{ maxWidth: '400px', margin: '60px auto', padding: '20px' }}>
       <h1>Login to Daily Daisy</h1>
       
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div style={{ marginBottom: '15px' }}>
           <label style={{ display: 'block', marginBottom: '5px' }}>Email</label>
           <input
@@ -68,7 +95,17 @@ export default function Login() {
         </div>
 
         {error && (
-          <div style={{ color: 'red', marginBottom: '15px' }}>{error}</div>
+          <div style={{ 
+            backgroundColor: '#ffebee',
+            color: '#c62828',
+            padding: '12px 15px',
+            borderRadius: '8px',
+            marginBottom: '15px',
+            border: '1px solid #ef9a9a',
+            fontSize: '0.9rem'
+          }}>
+            {error}
+          </div>
         )}
 
         <button 
