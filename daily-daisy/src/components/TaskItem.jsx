@@ -59,7 +59,11 @@ export default function TaskItem({ task, onUpdate }) {
             color: task.status === 'completed' ? '#999' : '#000'
           }}
         >
-          {task.title.replace(/\[\d{1,2}(AM|PM)\]\s*/, '')}
+          {/* hide both date and time tags in title of tasks */}
+          {task.title
+            .replace(/\[\d{4}-\d{2}-\d{2}\]\s*/, '')
+            .replace(/\[\d{1,2}(AM|PM)\]\s*/, '')
+          }
         </span>
         <button
           onClick={handleDelete}
